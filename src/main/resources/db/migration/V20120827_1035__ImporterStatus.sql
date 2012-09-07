@@ -1,5 +1,3 @@
-
-
 CREATE TABLE sorimporterImportStatus (
     Id BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
     StartTime DATETIME NOT NULL,
@@ -7,4 +5,4 @@ CREATE TABLE sorimporterImportStatus (
     Outcome VARCHAR(20),
 
     INDEX (StartTime)
-);
+) ENGINE=InnoDB COLLATE=utf8_bin;
