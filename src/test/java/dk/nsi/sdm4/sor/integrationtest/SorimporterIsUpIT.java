@@ -11,6 +11,6 @@ import static org.junit.Assert.fail;
 public class SorimporterIsUpIT {
 	@Test
 	public void statusPageReturns200OK() throws Exception {
-		new StatuspageChecker().assertThatStatuspageReturns200OK("sorimporter");
+		new StatuspageChecker("sorimporter").assertThatStatuspageReturns200OK();
 	}
 }
