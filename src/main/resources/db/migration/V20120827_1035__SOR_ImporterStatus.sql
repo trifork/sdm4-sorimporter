@@ -1,4 +1,4 @@
-CREATE TABLE sorimporterImportStatus (
+ CREATE TABLE IF NOT EXISTS sorimporterImportStatus (
     Id BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
     StartTime DATETIME NOT NULL,
     EndTime DATETIME,
