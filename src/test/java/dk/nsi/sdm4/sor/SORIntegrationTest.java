@@ -42,8 +42,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
 import java.net.URL;
+import java.sql.Timestamp;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @Transactional
@@ -78,6 +80,18 @@ public class SORIntegrationTest {
 		assertDbCount(2890 - 255, "SygehusAfdeling where ValidTo > now()");
 		assertDbCount(328 - 2, "Apotek where ValidTo > now()");
 	}
+
+    @Test
+    public void modifiedDateIsUpdatedOnChange() throws Exception {
+        importFile("data/sor/SOR_FULL.xml");
+        Timestamp modified1 = jdbcTemplate.queryForObject(
+                "SELECT ModifiedDate FROM Praksis ORDER BY ModifiedDate DESC LIMIT 1", Timestamp.class);
+        Thread.sleep(1000);
+        importFile("data/sor/SOR_FULL2.xml");
+        Timestamp modified2 = jdbcTemplate.queryForObject(
+                "SELECT ModifiedDate FROM Praksis ORDER BY ModifiedDate DESC LIMIT 1", Timestamp.class);
+        assertFalse(modified1.equals(modified2));
+    }
 
 	private void assertDbCount(int expected, String table) {
 		assertEquals(expected, jdbcTemplate.queryForInt("Select count(*) FROM "+ table));

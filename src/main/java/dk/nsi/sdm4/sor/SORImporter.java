@@ -66,6 +66,9 @@ public class SORImporter implements Parser {
 
 		SLALogItem slaLogItem = slaLogger.createLogItem("SORImporter", "All files");
 		try {
+            // Reset transaction time before importing
+            persister.resetTransactionTime();
+
 			for (File file : datadirectory.listFiles()) {
 				MDC.put("filename", file.getName());
 
