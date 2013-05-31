@@ -61,26 +61,34 @@ public class SORImporter implements Parser {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public void process(File datadirectory) {
+	public void process(File datadirectory, String identifier) {
 		Preconditions.checkNotNull(datadirectory);
 
-		SLALogItem slaLogItem = slaLogger.createLogItem("SORImporter", "All files");
+        SLALogItem slaLogItem = slaLogger.createLogItem(getHome()+".process", "SDM4."+getHome()+".process");
+        slaLogItem.setMessageId(identifier);
+        slaLogItem.addCallParameter(Parser.SLA_INPUT_NAME, datadirectory.getAbsolutePath());
 		try {
             // Reset transaction time before importing
             persister.resetTransactionTime();
-
+            long processed = 0;
 			for (File file : datadirectory.listFiles()) {
 				MDC.put("filename", file.getName());
 
 				SORDataSets dataSets = parse(file);
 				persister.persistCompleteDataset(dataSets.getPraksisDS());
+                processed += dataSets.getPraksisDS().size();
 				persister.persistCompleteDataset(dataSets.getYderDS());
+                processed += dataSets.getYderDS().size();
 				persister.persistCompleteDataset(dataSets.getSygehusDS());
+                processed += dataSets.getSygehusDS().size();
 				persister.persistCompleteDataset(dataSets.getSygehusAfdelingDS());
+                processed += dataSets.getSygehusAfdelingDS().size();
 				persister.persistCompleteDataset(dataSets.getApotekDS());
+                processed += dataSets.getApotekDS().size();
 
 				MDC.remove("filename");
 			}
+            slaLogItem.addCallParameter(Parser.SLA_RECORDS_PROCESSED_MAME, ""+processed);
 			slaLogItem.setCallResultOk();
 			slaLogItem.store();
 		} catch (Exception e) {

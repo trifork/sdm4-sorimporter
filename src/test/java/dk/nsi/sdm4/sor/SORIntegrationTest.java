@@ -102,7 +102,7 @@ public class SORIntegrationTest {
 		File datasetDir = tmpDir.newFolder();
 		FileUtils.copyURLToFile(resource, new File(datasetDir, lastPathSegment(filePath)));
 
-		importer.process(datasetDir);
+		importer.process(datasetDir, "");
 	}
 
 	private String lastPathSegment(String filePath) {
